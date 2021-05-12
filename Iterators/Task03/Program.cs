@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Text;
 
 /* На вход подается число N.
  * На каждой из следующих N строках записаны ФИО человека, 
@@ -35,9 +36,11 @@ namespace Task03
     {
         static void Main(string[] args)
         {
+            Console.InputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8;
             try
             {
-                if (int.TryParse(Console.ReadLine(), out int N))
+                if (int.TryParse(Console.ReadLine(), out int N) || N < 0)
                 {                  
                     Person[] people = new Person[N];
                     for (int i = 0; i < N; i++)
