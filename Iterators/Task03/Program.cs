@@ -40,7 +40,7 @@ namespace Task03
             Console.OutputEncoding = Encoding.UTF8;
             try
             {
-                if (int.TryParse(Console.ReadLine(), out int N) || N < 0)
+                if (int.TryParse(Console.ReadLine(), out int N) && N > 0)
                 {                  
                     Person[] people = new Person[N];
                     for (int i = 0; i < N; i++)

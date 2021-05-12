@@ -27,35 +27,65 @@ namespace Task04
         {
             try
             {
-                int value = 
-                MyInts myInts = new MyInts();
-                IEnumerator enumerator = myInts.MyEnumerator(value);
+                if (int.TryParse(Console.ReadLine(), out int value) && value > 0)
+                {
+                    MyInts myInts = new MyInts();
+                    IEnumerator enumerator = myInts.MyEnumerator(value);
 
-                IterateThroughEnumeratorWithoutUsingForeach(enumerator);
-                Console.WriteLine();
-                IterateThroughEnumeratorWithoutUsingForeach(enumerator);
+                    IterateThroughEnumeratorWithoutUsingForeach(enumerator);
+                    Console.WriteLine();
+                    IterateThroughEnumeratorWithoutUsingForeach(enumerator);
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
             }
             catch (ArgumentException)
             {
                 Console.WriteLine("error");
             }
-            
+            Console.ReadLine();
         }
 
         static void IterateThroughEnumeratorWithoutUsingForeach(IEnumerator enumerator)
-        {
+        {           
+            while (enumerator.MoveNext())
+            {
+                Console.Write(enumerator.Current + " ");
+            }
+            enumerator.Reset();
         }
     }
 
     class MyInts : IEnumerator // НЕ МЕНЯТЬ ЭТУ СТРОКУ
     {
-        
+        int position = 0;
+        int end;
+        public IEnumerator MyEnumerator(int value)
+        {
+            end = value;
+            return this;
+        }
+
         public bool MoveNext()
         {
+            return position++ != end;
+        }
+
+        public void Reset()
+        {
+            position = 0;
         }
 
         public object Current
         {
+            get
+            {
+                return position * position;
+            }
         }
+
+        object IEnumerator.Current => Current;
     }
 }
