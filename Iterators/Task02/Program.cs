@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,10 +36,30 @@ namespace Task02
 
         public IteratorSample(string[] values, int start)
         {
+            if (start < 0 || values == null || start > values.Length - 1)
+            {
+                throw new ArgumentException();
+            }
             this.values = values;
             this.start = start;
         }
 
+        public IEnumerator<string> GetEnumerator()
+        {
+            for (int i = start; i < values.Length; i++)
+            {
+                yield return values[i];
+            }
+            for (int i = 0; i < start; i++)
+            {
+                yield return values[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 
     class Program
@@ -47,23 +68,38 @@ namespace Task02
         {
             try
             {
-                int startingIndex = 
-                string[] values = 
+                if (int.TryParse(Console.ReadLine(), out int startingIndex))
+                {
+                    startingIndex--;
+                    string[] values = Console.ReadLine().Split();
+                    Array.ForEach(values, str => str.Trim());
 
-                foreach (string ob in new IteratorSample(values, startingIndex))
-                    Console.Write(ob + " ");
-                Console.WriteLine();
+                    var spacesDeleted = new List<string>();
+                    foreach (var value in values)
+                    {
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            spacesDeleted.Add(value);
+                        }
+                    }
+
+                    foreach (string ob in new IteratorSample(spacesDeleted.ToArray(), startingIndex))
+                        Console.Write(ob + " ");
+                    Console.WriteLine();
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
                 Console.WriteLine("error");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("problem");
             }
-
-            Console.ReadLine();
         }
     }
 }
