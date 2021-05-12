@@ -105,7 +105,6 @@ namespace Task03
         }
     }
 
-
     public class People : IEnumerable
     {
         private Person[] _people;
