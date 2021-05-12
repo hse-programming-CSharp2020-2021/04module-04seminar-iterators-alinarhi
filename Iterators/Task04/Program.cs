@@ -56,7 +56,7 @@ namespace Task04
             {
                 str.Append(enumerator.Current + " ");
             }
-            Console.WriteLine(str.ToString().TrimEnd());
+            Console.Write(str.ToString().TrimEnd());
             enumerator.Reset();
         }
     }
