@@ -37,49 +37,88 @@ namespace Task03
         {
             try
             {
-                int N =
-                Person[] people = new Person[N];
+                if (int.TryParse(Console.ReadLine(), out int N))
+                {                  
+                    Person[] people = new Person[N];
+                    for (int i = 0; i < N; i++)
+                    {
+                        var input = Console.ReadLine().Split();
+                        if (input.Length < 2 || string.IsNullOrWhiteSpace(input[0]) || string.IsNullOrWhiteSpace(input[1]))
+                        {
+                            throw new ArgumentException();
+                        }
+                        people[i] = new Person(input[1], input[0]);
+                    }
 
-                People peopleList = new People(people);
+                    People peopleList = new People(people);
 
-                foreach (Person p in peopleList)
-                    Console.WriteLine(p);
-
-                foreach (Person p in peopleList.GetPeople)
-                    Console.WriteLine(p);
+                    foreach (Person p in peopleList)
+                        Console.WriteLine(p);
+                    Console.WriteLine();
+                    foreach (Person p in peopleList.GetPeople)
+                        Console.WriteLine(p);
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
             }
             catch (ArgumentException)
             {
                 Console.Write("error");
             }
+
+
+
+            Console.ReadLine();
         }
     }
 
-    public class Person
+    public class Person : IComparable<Person>
     {
         public string firstName;
         public string lastName;
 
         public Person(string firstName, string lastName)
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
+            var firstLetter = firstName[0].ToString();
+            this.firstName = firstName.Replace(firstLetter, firstLetter.ToUpper());
+            firstLetter = lastName[0].ToString();
+            this.lastName = lastName.Replace(firstLetter, firstLetter.ToUpper());
         }
 
-    
+        public int CompareTo(Person other)
+        {
+            int comp = lastName.ToLower().CompareTo(other.lastName.ToLower());
+            if (comp == 0)
+            {
+                return firstName.ToLower().CompareTo(other.firstName.ToLower());
+            }
+            return comp;
+        }
+        public override string ToString()
+        {
+            return $"{lastName} {firstName[0]}.";
+        }
     }
 
 
     public class People : IEnumerable
     {
         private Person[] _people;
+
+        public People(Person[] people)
+        {
+            _people = people;
+        }
         public Person[] GetPeople
         {
-            get {
+            get
+            {
                 return _people;
             }
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -90,27 +129,38 @@ namespace Task03
             return new PeopleEnum(_people);
         }
     }
-    
+
     public class PeopleEnum : IEnumerator
     {
+        int position = -1;
         public Person[] _people;
 
-      
+        public PeopleEnum(Person[] people)
+        {
+            _people = new Person[people.Length];
+            Array.Copy(people, _people, people.Length);
+            Array.Sort(_people);
+        }
 
         public bool MoveNext()
         {
-            
+            return position++ != _people.Length - 1;
         }
 
         public void Reset()
         {
-            
+            position = -1;
         }
-       
+
 
         public Person Current
         {
-            
+            get
+            {
+                return _people[position];
+            }
         }
+
+        object IEnumerator.Current => Current;
     }
 }
